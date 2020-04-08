@@ -1,5 +1,6 @@
 package com.ktz.sh.bigdata.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ktz.sh.bigdata.document.Item;
 import com.ktz.sh.bigdata.repository.ItemRepository;
 import org.elasticsearch.index.query.MatchQueryBuilder;
@@ -177,6 +178,8 @@ public class AdvanceController {
             InternalAvg avg = (InternalAvg) bucket.getAggregations().asMap().get("priceAvg");
             System.out.println("平均售价：" + avg.getValue());
         }
+
+        System.out.println(buckets);
         return buckets.toString();
     }
 }
