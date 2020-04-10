@@ -1,6 +1,8 @@
 package com.ktz.sh.bigdata.controller;
 
+import org.frameworkset.elasticsearch.ElasticSearchException;
 import org.frameworkset.elasticsearch.boot.BBossESStarter;
+import org.frameworkset.elasticsearch.client.ClientInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CreateController {
 
+
     @Autowired
     private BBossESStarter bbossESStarter;
 
@@ -25,14 +28,19 @@ public class CreateController {
      */
     @PostMapping("/create_index")
     public Object createIndex() {
-        boolean exist = bbossESStarter.getRestClient().existIndiceType("twitter", "tweet");
-
-        //判读索引是否存在，false表示不存在，正常返回true表示存在
-        exist = bbossESStarter.getRestClient().existIndice("twitter");
-
-        exist = bbossESStarter.getRestClient().existIndice("agentinfo");
-        return exist ? "success" : "fail";
+        ClientInterface client = bbossESStarter.getConfigRestClient("esmapper/Example.xml");
+        try {
+            boolean exist = client.existIndice("example");
+            // 判断索引是否存在
+            if (exist) {
+                client.dropIndice("example");
+            }
+            client.createIndiceMapping("example", "create_example_index");
+            return "success";
+        } catch (ElasticSearchException e) {
+            e.printStackTrace();
+            return "fail";
+        }
     }
-
 
 }
