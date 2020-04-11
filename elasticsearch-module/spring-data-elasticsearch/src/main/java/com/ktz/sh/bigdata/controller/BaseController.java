@@ -31,20 +31,34 @@ public class BaseController {
      * 接口定位方法
      */
     private void location() {
-        /*创建索引*/ createIndex();
-        /*往索引中添加数据*/ importData();
-        /*批量添加数据*/ indexList();
-        /*根据ID修改数据*/ updateData();
-        /*根据ID删除*/ deleteData();
-        /*批量删除*/ deleteAll();
-        /*根据ID查询*/ findData();
-        /*查询全部*/ findList();
-        /*根据ID集合查询对应文档集合*/ conditionFindAll();
-        /*查询全部并排序*/ findAllSort();
-        /*查询全部分页*/ findAllPage();
-        /*查询文档数量*/ count();
-        /*判断一个文档是否存在*/ existData();
-        /*自定义查询*/ findPriceBetween();
+        /*创建索引*/
+        createIndex();
+        /*往索引中添加数据*/
+        importData();
+        /*批量添加数据*/
+        indexList();
+        /*根据ID修改数据*/
+        updateData();
+        /*根据ID删除*/
+        deleteData();
+        /*批量删除*/
+        deleteAll();
+        /*根据ID查询*/
+        findData();
+        /*查询全部*/
+        findList();
+        /*根据ID集合查询对应文档集合*/
+        conditionFindAll();
+        /*查询全部并排序*/
+        findAllSort();
+        /*查询全部分页*/
+        findAllPage();
+        /*查询文档数量*/
+        count();
+        /*判断一个文档是否存在*/
+        existData();
+        /*自定义查询*/
+        findPriceBetween();
     }
 
     @Autowired
@@ -75,7 +89,7 @@ public class BaseController {
      */
     @PostMapping("/import_data")
     public Object importData() {
-        Item item = new Item(1L, "小米手机7", " 手机",
+        Item item = new Item(1L, "小米手机", " 手机",
                 "小米", 3499.00, "http://image.leyou.com/13123.jpg");
         Item save = itemRepository.save(item);
         return save;
@@ -89,11 +103,21 @@ public class BaseController {
     @PostMapping("/import_list")
     public Object indexList() {
         List<Item> list = new ArrayList<>();
-        list.add(new Item(1L, "小米手机7", "手机", "小米", 3299.00, "http://image.leyou.com/13123.jpg"));
-        list.add(new Item(2L, "坚果手机R1", "手机", "锤子", 3699.00, "http://image.leyou.com/13123.jpg"));
-        list.add(new Item(3L, "华为META10", "手机", "华为", 4499.00, "http://image.leyou.com/13123.jpg"));
-        list.add(new Item(4L, "小米Mix2S", "手机", "小米", 4299.00, "http://image.leyou.com/13123.jpg"));
-        list.add(new Item(5L, "荣耀V10", "手机", "华为", 2799.00, "http://image.leyou.com/13123.jpg"));
+        for (int i = 0; i < 10; i++) {
+            list.add(new Item((long) i, "小米手机" + i, "手机", "小米", 3299.00 * Math.random(), "http://image.leyou.com/13123.jpg"));
+        }
+        for (int i = 10; i < 20; i++) {
+            list.add(new Item((long) i, "坚果手机" + i + "X", "手机", "锤子", 6699.00 * Math.random(), "http://image.leyou.com/13123.jpg"));
+        }
+        for (int i = 20; i < 30; i++) {
+            list.add(new Item((long) i, "荣耀V" + i, "电脑", "华为", 9699.00 * Math.random(), "http://image.leyou.com/13123.jpg"));
+        }
+        for (int i = 20; i < 30; i++) {
+            list.add(new Item((long) i, "耐克20" + i, "运动鞋", "耐克", 9699.00 * Math.random(), "http://image.leyou.com/13123.jpg"));
+        }
+        for (int i = 40; i < 50; i++) {
+            list.add(new Item((long) i, "山寨小米" + i + "荣耀典藏版", "山寨机", "无", 9699.00 * Math.random(), "http://image.leyou.com/13123.jpg"));
+        }
         // 接收对象集合，实现批量新增
         Iterable<Item> items = itemRepository.saveAll(list);
         return items;
