@@ -16,8 +16,8 @@
                         "type": "text"
                     },
                     "agentStarttime": {
-                        "type": "date"
-                         ## ,"format":"yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd'T'HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||epoch_millis"
+                        "type": "date",
+                         "format":"yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd'T'HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||epoch_millis"
                     },
                     "agentStarttimezh": {
                             "type": "date",
@@ -25,14 +25,14 @@
                         },
                     "applicationName": {
                         "type": "text",
-                        "fields": { ##dsl注释 定义精确查找的内部keyword字段
+                        "fields": {
                             "keyword": {
                                 "type": "keyword"
                             }
                         }
                     },
                     "name": {
-                        "type": "text"
+                        "type": "keyword"
                     },
                     "contrastStatus":{
                         "type":"integer"
@@ -49,6 +49,37 @@
             }
         }]]>
     </property>
+    <!-- 文档搜索 -->
+    <property name="search_document">
+        <![CDATA[{
+            "query": {
+                "bool": {
+                    "filter": {
+                        ## 对于keyword类型使用match是没有效果的
+                        "match": {
+                            "name": #[name]
+                        }
+                    }
+                }
+            }
+        }]]>
+    </property>
 
+    <!-- 分页搜索 -->
+    <property name="search_page">
+        <![CDATA[{
+            "query": {
+                "bool": {
+                    "filter":{
+                        "match": {
+                            "name": #[name]
+                        }
+                    }
+                }
+            },
+            "from": #[from],
+            "size": #[size]
+        }]]>
+    </property>
 
 </properties>

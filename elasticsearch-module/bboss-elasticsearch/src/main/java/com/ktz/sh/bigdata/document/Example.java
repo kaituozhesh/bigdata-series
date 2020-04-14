@@ -20,11 +20,13 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Example extends ESBaseData {
+public class Example{
 
     @ESId(readSet = true, persistent = false)
     private Long demoId;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    @Column(dataformat = "yyyy-MM-dd HH:mm:ss.SSS")
     private Date agentStartTime;
 
     private String applicationName;
