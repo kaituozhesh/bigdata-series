@@ -68,11 +68,22 @@ public class BaseController {
         ClientInterface client = bbossESStarter.getRestClient();
         List<Example> exampleList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            exampleList.add(new Example((long)i, new Date(), "blackcatdemo" + i, "this-is content body" + i, "|刘德华" + i, "NFZF15045871807281445364228" + i, 2));
+            exampleList.add(new Example((long) i, new Date(), "blackcatdemo" + i, "this-is content body" + i, "刘德华" + i, "NFZF15045871807281445364228" + i, 2));
         }
         String response = client.addDocuments("example", exampleList, "refresh");
         return response;
     }
 
+    /**
+     * 根据ID获取文档对象
+     *
+     * @return
+     */
+    @PostMapping("/find_document")
+    public Object findDocument() {
+        ClientInterface client = bbossESStarter.getRestClient();
+        Example example = client.getDocument("example", "_doc", "2", Example.class);
+        return example;
+    }
 
 }

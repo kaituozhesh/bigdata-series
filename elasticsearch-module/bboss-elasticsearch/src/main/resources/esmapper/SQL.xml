@@ -1,0 +1,11 @@
+<properties>
+
+    <!-- 指定条件的SQL搜索 -->
+    <property name="sql_query">
+        <![CDATA[
+           ## 字符串类型不能是text
+         {"query": "SELECT * FROM example where name='#[name,quoted=false]'"}
+        ]]>
+    </property>
+
+</properties>
