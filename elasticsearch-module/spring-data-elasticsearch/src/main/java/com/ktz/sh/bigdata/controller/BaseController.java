@@ -31,34 +31,20 @@ public class BaseController {
      * 接口定位方法
      */
     private void location() {
-        /*创建索引*/
-        createIndex();
-        /*往索引中添加数据*/
-        importData();
-        /*批量添加数据*/
-        indexList();
-        /*根据ID修改数据*/
-        updateData();
-        /*根据ID删除*/
-        deleteData();
-        /*批量删除*/
-        deleteAll();
-        /*根据ID查询*/
-        findData();
-        /*查询全部*/
-        findList();
-        /*根据ID集合查询对应文档集合*/
-        conditionFindAll();
-        /*查询全部并排序*/
-        findAllSort();
-        /*查询全部分页*/
-        findAllPage();
-        /*查询文档数量*/
-        count();
-        /*判断一个文档是否存在*/
-        existData();
-        /*自定义查询*/
-        findPriceBetween();
+        /*创建索引*/ createIndex();
+        /*往索引中添加数据*/ importData();
+        /*批量添加数据*/ indexList();
+        /*根据ID修改数据*/ updateData();
+        /*根据ID删除*/ deleteData();
+        /*批量删除*/ deleteAll();
+        /*根据ID查询*/ findData();
+        /*查询全部*/ findList();
+        /*根据ID集合查询对应文档集合*/ conditionFindAll();
+        /*查询全部并排序*/ findAllSort();
+        /*查询全部分页*/ findAllPage();
+        /*查询文档数量*/ count();
+        /*判断一个文档是否存在*/ existData();
+        /*自定义查询*/ findPriceBetween();
     }
 
     @Autowired
