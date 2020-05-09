@@ -50,5 +50,173 @@
         }]]>
     </property>
 
+    <property name="category_search_by_id">
+        <![CDATA[
+            {"query": "SELECT * FROM category_info where id=#[id]"}
+        ]]>
+    </property>
 
+    <property name="category_search_by_level">
+        <![CDATA[
+            {"query": "SELECT * FROM category_info where level=#[level] and showStatus=1 and status=1 order by sortOrder"}
+        ]]>
+    </property>
+
+    <property name="search_brand">
+        <![CDATA[{
+            "query": {
+                "term": { "categoryId": #[categoryId] }   ## 分类
+            },
+            "sort" : { "sortOrder": "asc"}
+        }]]>
+    </property>
+
+
+    <property name="delete_brand">
+        <![CDATA[{
+            "query": {
+                "bool": {
+                    "must": [
+                        { "term": { "id": #[id] }},    ## 分类
+                        { "term": { "categoryId": #[categoryId] }}    ## 分类
+                    ]
+                }
+            }
+        }]]>
+    </property>
+
+    <property name="search_recommend_goods">
+        <![CDATA[{
+            "query": {
+                "bool": {
+                    "must": [
+                        { "term": { "recommandStatus": 1 }},          ## 推荐商品
+                        { "term": { "areaCode": #[areaCode] }}        ## 国家
+                    ]
+                }
+            },
+            "sort": {
+                "_script": {
+                    "script": "Math.random()",
+                    "type": "number",
+                    "order": "asc"
+                }
+            },
+            "from": #[from],
+            "size": #[size]
+        }]]>
+    </property>
+
+
+    <property name="search_resemblance_goods">
+        <![CDATA[{
+            "query": {
+                "bool": {
+                    #if($categoryId)
+                    "must": {
+                        "bool": {
+                            "should": {
+                                "multi_match" : {
+                                    "query" : #[categoryId],
+                                    "fields": ["categoryId", "cateParentId"]
+                                }
+                            }
+                        }
+                    },
+                    #end
+                    "must_not":{ "match": { "goodsSn": #[goodsSn] }}
+                }
+            },
+            "from":#[from],
+            "size":#[size]
+        }]]>
+    </property>
+
+    <property name="GoodsSearch">
+        <![CDATA[{
+            #set( $mustComma = false )
+            #set( $sortComma = false )
+            #set( $globalComma = false )
+            "query": {
+                "bool": {
+                    "must": [
+                        #if($brandId || $seriesId || $newStatus || $areaCode)
+                            #if($brandId)
+                                #if($mustComma),#end
+                                { "term": { "brandId": #[brandId] }}          ## 品牌
+                                 #set( $mustComma = true )
+                            #end
+                            #if($seriesId)
+                                #if($mustComma),#end
+                                { "term": { "seriesId": #[seriesId] }}        ## 系列
+                                 #set( $mustComma = true )
+                            #end
+                            #if($areaCode)
+                                #if($mustComma),#end
+                                { "term": { "areaCode": #[areaCode] }}        ## 国家
+                                 #set( $mustComma = true )
+                            #end
+                            #if($newStatus)
+                                #if($mustComma),#end
+                                {
+                                   "wildcard": {
+                                        "newStatus": #[newStatus]
+                                    }
+                                }        ## 系列
+                            #end
+                            #set( $globalComma = true )
+                        #end
+                        #if($categoryId)
+                        #if($globalComma),#end
+                        {
+                            "bool": {
+                                "should": {
+                                    "multi_match" : {
+                                        "query" : #[categoryId],
+                                        "fields": ["categoryId", "cateParentId"]
+                                    }
+                                }
+                            }
+                            #set( $globalComma = true )
+                        }
+                        #end
+                        #if($keyword)
+                        #if($globalComma),#end
+                        {
+                            "bool": {
+                                "should": {
+                                    "multi_match" : {
+                                        "query" : #[keyword],
+                                        "fields": ["categoryName", "brandName", "seriesName", "goodsName", "subTitle", "description"]
+                                    }
+                                }
+                            }
+                            #set( $globalComma = true )
+                        }
+                        #end
+                    ]
+                    #if($minPrice)
+                    #if($globalComma),#end
+                    "filter": {
+                        "range": {
+                            ## 价格区间  或者之上
+                            "minPrice": { "gte": #[minPrice] #if($maxPrice) ,"lte": #[maxPrice] #end }
+                        }
+                     }
+                    #end
+                }
+            },
+            ## 根据价格排序
+            #if( $orderColumn )
+                "sort":
+                    #if( $orderColumn == 'price' )
+                        { "minPrice": { "order": #[order] }},
+                    #else
+                        { #[orderColumn]: { "order": #[order] }},
+                    #end
+             #end
+            "from":#[from],
+            "size":#[size]
+        }]]>
+    </property>
 </properties>
